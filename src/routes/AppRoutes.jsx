@@ -1,9 +1,10 @@
 import { Routes, Route } from "react-router-dom";
+import Home from "../pages/Home.jsx";
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<h1>Employee Management Portal</h1>} />
+      <Route path="/" element={<Home />} />
     </Routes>
   );
 }
