@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import EmployeeCard from "../components/EmployeeCard.jsx";
 
 function Employees() {
   const [employees, setEmployees] = useState([]);
@@ -23,9 +24,14 @@ function Employees() {
       <p>Welcome to Employees Page</p>
 
       {employees.map((employee) => {
-        return <h2 key={employee.id}>{employee.firstName}</h2>;
+        return (<EmployeeCard 
+        key={employee.id}
+        employee={employee} //left side is the prop name, right side is the value we are passing to the prop  
+        />
+        );
       })}
     </div>
+  
   );
 }
 
