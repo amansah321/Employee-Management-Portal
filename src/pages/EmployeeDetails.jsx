@@ -2,7 +2,6 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-
 function EmployeeDetails() {
   const { id } = useParams();
   const [employee, setEmployee] = useState(null);

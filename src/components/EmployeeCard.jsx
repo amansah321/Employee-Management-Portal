@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function EmployeeCard({ employee }) {
   return (
@@ -9,7 +10,8 @@ function EmployeeCard({ employee }) {
         {employee.firstName} {employee.lastName}
       </h3>
       <p>{employee.email}</p>
-      <p>{employee.department}</p>
+      <p>{employee.company.department}</p>
+      <Link to={`/employees/${employee.id}`}>View Details</Link>
     </div>
   );
 }
