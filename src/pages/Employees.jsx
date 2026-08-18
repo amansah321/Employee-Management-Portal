@@ -7,6 +7,7 @@ function Employees() {
   const [employees, setEmployees] = useState([]);
   const [searchEmployee, setSearchEmployee] = useState("");
   const [selectDepartment, setSelectDepartment] = useState("");
+  const [sortOption, setSortOption] = useState("");
 
   useEffect(() => {
     axios
@@ -37,6 +38,17 @@ function Employees() {
       employee.company.department === selectDepartment;
     return searchMatches && departmentMatches;
   });
+
+  const sortedEmployees = [...filteredEmployees].sort((a, b) => {
+    if (sortOption === "firstName-asc") {
+      return a.firstName.localeCompare(b.firstName);
+    }
+
+    if (sortOption === "firstName-desc") {
+      return b.firstName.localeCompare(a.firstName);
+    }
+    return 0;
+  });
   return (
     <div>
       <h1>Employees</h1>
@@ -61,8 +73,17 @@ function Employees() {
         ))}
       </select>
 
-      {filteredEmployees.length > 0 ? (
-        filteredEmployees.map((employee) => {
+      <select
+        value={sortOption}
+        onChange={(e) => setSortOption(e.target.value)}
+      >
+        <option value="">Sort by</option>
+        <option value="firstName-asc">First Name A → Z</option>
+        <option value="firstName-desc">First Name Z → A</option>
+      </select>
+
+      {sortedEmployees.length > 0 ? (
+        sortedEmployees.map((employee) => {
           return (
             <EmployeeCard
               key={employee.id}
