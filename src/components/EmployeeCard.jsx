@@ -13,6 +13,7 @@ function EmployeeCard({ employee }) {
       <p>{employee.company.department}</p>
       <Link to={`/employees/${employee.id}`}>View Details</Link>
     </div>
+    
   );
 }
 
