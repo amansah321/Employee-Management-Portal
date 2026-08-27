@@ -4,6 +4,7 @@ import NotFound from "../pages/NotFound.jsx";
 import MainLayout from "../common layout/MainLayout.jsx";
 import Employees from "../pages/Employees.jsx";
 import EmployeeDetails from "../pages/EmployeeDetails.jsx";
+import AddEmployee from "../pages/AddEmployee.jsx";
 
 function AppRoutes() {
   return (
@@ -11,6 +12,7 @@ function AppRoutes() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/employees" element={<Employees />} />
+        <Route path="/employees/add" element={<AddEmployee />} />
         <Route path="/employees/:id" element={<EmployeeDetails />} />
       </Route>
       <Route path="*" element={<NotFound />} />

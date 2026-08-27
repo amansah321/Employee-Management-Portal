@@ -2,8 +2,11 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import EmployeeCard from "../components/EmployeeCard.jsx";
+import { Link, useLocation } from "react-router-dom";
 
 function Employees() {
+  const location = useLocation();
+  console.log(location.state);
   const [employees, setEmployees] = useState([]);
   const [searchEmployee, setSearchEmployee] = useState("");
   const [selectDepartment, setSelectDepartment] = useState("");
@@ -18,7 +21,10 @@ function Employees() {
     axios
       .get("https://dummyjson.com/users")
       .then((response) => {
-        setEmployees(response.data.users);
+        setEmployees([
+          ...response.data.users,
+          ...(location.state?.newEmployee ? [location.state.newEmployee] : []),
+        ]);
       })
 
       .catch((error) => {
@@ -28,13 +34,24 @@ function Employees() {
 
   //This use effect will run -"Whenever searchEmployee, selectDepartment, or sortOption changes, set currentPage back to 1."Its important to reset the current page to 1 whenever the search, filter, or sort options change, so that the user sees the first page of results for their new query. It is called Pagination-reset effect.
 
+  // This useEffect will run whenever the location.state changes, which happens when we navigate back from the AddEmployee page after adding a new employee. If there is a new employee in the location.state, we add it to the employees state.
+
+  useEffect(() => {
+    if (location.state?.newEmployee) {
+      setEmployees((prevEmployees) => [
+        ...prevEmployees,
+        location.state.newEmployee,
+      ]);
+    }
+  }, [location.state]);
+
   useEffect(() => {
     setCurrentPage(1);
   }, [searchEmployee, selectDepartment, sortOption]);
 
   const departments = [];
   for (const employee of employees) {
-    const department = employee.company.department;
+    const department = employee.department || employee.company?.department;
     if (!departments.includes(department)) {
       departments.push(department);
     }
@@ -46,7 +63,8 @@ function Employees() {
 
     const departmentMatches =
       selectDepartment === "" ||
-      employee.company.department === selectDepartment;
+      (employee.department || employee.company?.department) ===
+        selectDepartment;
     return searchMatches && departmentMatches;
   });
 
@@ -65,6 +83,10 @@ function Employees() {
   return (
     <div>
       <h1>Employees</h1>
+
+      <Link to="/employees/add">
+        <button>Add Employee</button>
+      </Link>
       <p>Welcome to Employees Page</p>
 
       <input

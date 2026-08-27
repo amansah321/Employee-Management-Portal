@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 function EmployeeDetails() {
+
   const { id } = useParams();
   const [employee, setEmployee] = useState(null);
   //console.log(id); // Log the params to see the values
@@ -22,18 +23,18 @@ function EmployeeDetails() {
   return (
     <div>
       <h1>Employee Details</h1>
-      { employee && (
+      {employee && (
         <div>
           <h2>
-          {employee.firstName} {employee.lastName}
-        </h2>
+            {employee.firstName} {employee.lastName}
+          </h2>
 
-        <p>Email: {employee.email}</p>
-        <p>Age: {employee.age}</p>
-        <p>Gender: {employee.gender}</p>
-        <p>Phone: {employee.phone}</p>
-        <p>Role: {employee.role}</p>
-      </div>  
+          <p>Email: {employee.email}</p>
+          <p>Age: {employee.age}</p>
+          <p>Gender: {employee.gender}</p>
+          <p>Phone: {employee.phone}</p>
+          <p>Role: {employee.role}</p>
+        </div>
       )}
     </div>
   );
