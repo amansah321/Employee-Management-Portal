@@ -12,6 +12,8 @@ function EmployeeCard({ employee }) {
       <p>{employee.email}</p>
       <p>{employee.company.department}</p>
       <Link to={`/employees/${employee.id}`}>View Details</Link>
+      <Link to={`/employees/${employee.id}/edit`}>Edit</Link>
+      
     </div>
     
   );

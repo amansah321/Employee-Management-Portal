@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 
 function Employees() {
   const location = useLocation();
-  console.log(location.state);
+  console.log("Employee's location state:", location.state);
   const [employees, setEmployees] = useState([]);
   const [searchEmployee, setSearchEmployee] = useState("");
   const [selectDepartment, setSelectDepartment] = useState("");
@@ -21,29 +21,26 @@ function Employees() {
     axios
       .get("https://dummyjson.com/users")
       .then((response) => {
-        setEmployees([
-          ...response.data.users,
-          ...(location.state?.newEmployee ? [location.state.newEmployee] : []),
-        ]);
-      })
+        let employeeList = response.data.users;
 
+        if (location.state?.newEmployee) {// Check if a new employee was added
+          employeeList = [...employeeList, location.state.newEmployee];
+        }
+
+        if (location.state?.updatedEmployee) { // Check if an employee was updated
+          employeeList = employeeList.map((employee) =>
+            employee.id === location.state.updatedEmployee.id
+              ? location.state.updatedEmployee
+              : employee,
+          );
+        }
+
+        setEmployees(employeeList);
+      })
       .catch((error) => {
         console.log(error);
       });
   }, []);
-
-  //This use effect will run -"Whenever searchEmployee, selectDepartment, or sortOption changes, set currentPage back to 1."Its important to reset the current page to 1 whenever the search, filter, or sort options change, so that the user sees the first page of results for their new query. It is called Pagination-reset effect.
-
-  // This useEffect will run whenever the location.state changes, which happens when we navigate back from the AddEmployee page after adding a new employee. If there is a new employee in the location.state, we add it to the employees state.
-
-  useEffect(() => {
-    if (location.state?.newEmployee) {
-      setEmployees((prevEmployees) => [
-        ...prevEmployees,
-        location.state.newEmployee,
-      ]);
-    }
-  }, [location.state]);
 
   useEffect(() => {
     setCurrentPage(1);
