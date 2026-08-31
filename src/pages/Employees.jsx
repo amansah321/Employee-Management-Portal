@@ -23,11 +23,13 @@ function Employees() {
       .then((response) => {
         let employeeList = response.data.users;
 
-        if (location.state?.newEmployee) {// Check if a new employee was added
+        if (location.state?.newEmployee) {
+          // Check if a new employee was added
           employeeList = [...employeeList, location.state.newEmployee];
         }
 
-        if (location.state?.updatedEmployee) { // Check if an employee was updated
+        if (location.state?.updatedEmployee) {
+          // Check if an employee was updated
           employeeList = employeeList.map((employee) =>
             employee.id === location.state.updatedEmployee.id
               ? location.state.updatedEmployee
@@ -77,6 +79,19 @@ function Employees() {
   });
   const paginatedEmployees = sortedEmployees.slice(startIndex, endIndex); // slice the employees array to get the employees for the current page
   const totalPages = Math.ceil(sortedEmployees.length / employessPerPage); // calculate the total number of pages
+
+  const deleteEmployee = async (id) => {
+    try {
+      const response = await axios.delete(`https://dummyjson.com/users/${id}`);
+      console.log("Delete Employee ID:", response.data);
+      setEmployees((prevEmployees) =>
+        prevEmployees.filter((employee) => employee.id !== id),
+      );  
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <h1>Employees</h1>
@@ -120,6 +135,7 @@ function Employees() {
             <EmployeeCard
               key={employee.id}
               employee={employee} //left side is the prop name, right side is the value we are passing to the prop
+              deleteEmployee={deleteEmployee} // Pass the deleteEmployee function as a prop to EmployeeCard
             />
           );
         })
@@ -137,6 +153,7 @@ function Employees() {
           </button>
 
           {Array.from({ length: totalPages }, (_, index) => {
+            // Create an array of totalPages length and map over it to create page buttons
             return (
               <button
                 key={index + 1}
