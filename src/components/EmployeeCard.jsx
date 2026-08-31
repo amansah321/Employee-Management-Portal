@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
-function EmployeeCard({ employee, deleteEmployee }) {
+function EmployeeCard({ employee, deleteEmployee, deletingEmployeeId }) {
+  // Accept the isDeleting prop
   // Accept the deletedEmployee function as a prop
   return (
     <div className="employee-card">
@@ -12,7 +13,12 @@ function EmployeeCard({ employee, deleteEmployee }) {
       <p>{employee.email}</p>
       <p>{employee.company.department}</p>
       <Link to={`/employees/${employee.id}`}>View Details</Link>
-      <button onClick={() => deleteEmployee(employee.id)}>Delete</button>
+      <button
+        onClick={() => deleteEmployee(employee.id)}
+        disabled={deletingEmployeeId === employee.id}
+      >
+        {deletingEmployeeId === employee.id ? "Deleting..." : "Delete"}
+      </button>
       <Link to={`/employees/${employee.id}/edit`}>Edit</Link>
     </div>
   );

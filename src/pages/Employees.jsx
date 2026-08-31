@@ -12,6 +12,7 @@ function Employees() {
   const [selectDepartment, setSelectDepartment] = useState("");
   const [sortOption, setSortOption] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [deletingEmployeeId, setDeletingEmployeeId] = useState(null);
 
   const employessPerPage = 10;
   const startIndex = (currentPage - 1) * employessPerPage; // calculate each page's starting index
@@ -45,10 +46,11 @@ function Employees() {
   }, []);
 
   useEffect(() => {
+    // Reset current page to 1 when search, filter, or sort options change
     setCurrentPage(1);
   }, [searchEmployee, selectDepartment, sortOption]);
 
-  const departments = [];
+  const departments = []; // Create an array to hold unique departments
   for (const employee of employees) {
     const department = employee.department || employee.company?.department;
     if (!departments.includes(department)) {
@@ -56,6 +58,7 @@ function Employees() {
     }
   }
   const filteredEmployees = employees.filter((employee) => {
+    // Filter employees based on search and department selection
     const searchMatches =
       employee.firstName.toLowerCase().includes(searchEmployee.toLowerCase()) ||
       employee.lastName.toLowerCase().includes(searchEmployee.toLowerCase());
@@ -81,16 +84,35 @@ function Employees() {
   const totalPages = Math.ceil(sortedEmployees.length / employessPerPage); // calculate the total number of pages
 
   const deleteEmployee = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this employee?",
+    );
+
+    if (!confirmDelete) {
+      return; // Exit the function if the user cancels the deletion
+    }
+
+    setDeletingEmployeeId(id); // Set the ID of the employee being deleted
+
     try {
       const response = await axios.delete(`https://dummyjson.com/users/${id}`);
       console.log("Delete Employee ID:", response.data);
       setEmployees((prevEmployees) =>
         prevEmployees.filter((employee) => employee.id !== id),
-      );  
+      );
     } catch (error) {
       console.log(error);
+    } finally {
+      setDeletingEmployeeId(null); // Reset the deletingEmployeeId state after the deletion process is complete
     }
   };
+
+  useEffect(() => {
+    // Ensure currentPage is within valid range when totalPages changes i.e. pagination after detete effect-----edge case ---when there is one employee in the last page and we delete that employee, then currentPage will be greater than totalPages, so we need to set currentPage to totalPages
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   return (
     <div>
@@ -136,6 +158,7 @@ function Employees() {
               key={employee.id}
               employee={employee} //left side is the prop name, right side is the value we are passing to the prop
               deleteEmployee={deleteEmployee} // Pass the deleteEmployee function as a prop to EmployeeCard
+              deletingEmployeeId={deletingEmployeeId}
             />
           );
         })
