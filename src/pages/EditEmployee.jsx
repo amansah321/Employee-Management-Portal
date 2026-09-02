@@ -1,4 +1,3 @@
-import React from "react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
@@ -8,7 +7,6 @@ function EditEmployee() {
   const [employee, setEmployee] = useState(null); // State to hold the employee data
   const { id } = useParams();
   const navigate = useNavigate();
-  console.log("Employee ID :", id);
   const [roles, setRoles] = useState([]); // State to hold the roles data
   const [departments, setDepartments] = useState([]); // State to hold the departments data
 
@@ -24,7 +22,6 @@ function EditEmployee() {
     axios
       .get(`https://dummyjson.com/users/${id}`)
       .then((response) => {
-        console.log("Employee Data :", response.data);
         setEmployee(response.data);
       })
       .catch((error) => {
@@ -74,12 +71,10 @@ function EditEmployee() {
         `https://dummyjson.com/users/${id}`,
         data,
       );
-
-      console.log("Updated Employee:", response.data);
-      navigate("/employees",{
-        state:{
-          updatedEmployee: response.data, // Pass the updated employee data to the employees page 
-        }
+      navigate("/employees", {
+        state: {
+          updatedEmployee: response.data, // Pass the updated employee data to the employees page
+        },
       });
     } catch (error) {
       console.log(error);

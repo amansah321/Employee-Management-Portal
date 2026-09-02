@@ -48,8 +48,6 @@ function AddEmployee() {
         "https://dummyjson.com/users/add",
         data,
       );
-
-      console.log(response.status);
       setSuccessMessage("Employee added successfully!");
       reset(); // Reset the form after successful submission
       navigate("/employees", {
@@ -63,7 +61,6 @@ function AddEmployee() {
         setSuccessMessage("");
       }, 3000);
     } catch (error) {
-      console.log(error);
       if (error.response) {
         setErrorMessage(
           `Failed to add employee. Status: ${error.response.status}`,

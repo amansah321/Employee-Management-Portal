@@ -1,4 +1,3 @@
-import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import EmployeeCard from "../components/EmployeeCard.jsx";
@@ -6,7 +5,6 @@ import { Link, useLocation } from "react-router-dom";
 
 function Employees() {
   const location = useLocation();
-  console.log("Employee's location state:", location.state);
   const [employees, setEmployees] = useState([]);
   const [searchEmployee, setSearchEmployee] = useState("");
   const [selectDepartment, setSelectDepartment] = useState("");
@@ -14,9 +12,9 @@ function Employees() {
   const [currentPage, setCurrentPage] = useState(1);
   const [deletingEmployeeId, setDeletingEmployeeId] = useState(null);
 
-  const employessPerPage = 10;
-  const startIndex = (currentPage - 1) * employessPerPage; // calculate each page's starting index
-  const endIndex = startIndex + employessPerPage; // calculate each page's ending index
+  const employeesPerPage = 10;
+  const startIndex = (currentPage - 1) * employeesPerPage; // calculate each page's starting index
+  const endIndex = startIndex + employeesPerPage; // calculate each page's ending index
 
   useEffect(() => {
     axios
@@ -50,13 +48,14 @@ function Employees() {
     setCurrentPage(1);
   }, [searchEmployee, selectDepartment, sortOption]);
 
-  const departments = []; // Create an array to hold unique departments
-  for (const employee of employees) {
-    const department = employee.department || employee.company?.department;
-    if (!departments.includes(department)) {
-      departments.push(department);
-    }
-  }
+  const departments = [
+    ...new Set(
+      employees.map(
+        (employee) => employee.department || employee.company?.department,
+      ),
+    ),
+  ];
+
   const filteredEmployees = employees.filter((employee) => {
     // Filter employees based on search and department selection
     const searchMatches =
@@ -81,7 +80,7 @@ function Employees() {
     return 0;
   });
   const paginatedEmployees = sortedEmployees.slice(startIndex, endIndex); // slice the employees array to get the employees for the current page
-  const totalPages = Math.ceil(sortedEmployees.length / employessPerPage); // calculate the total number of pages
+  const totalPages = Math.ceil(sortedEmployees.length / employeesPerPage); // calculate the total number of pages
 
   const deleteEmployee = async (id) => {
     const confirmDelete = window.confirm(

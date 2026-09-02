@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 
 function EmployeeCard({ employee, deleteEmployee, deletingEmployeeId }) {
-  // Accept the isDeleting prop
-  // Accept the deletedEmployee function as a prop
+  // Accept the deletingEmployeeId prop
+// Accept the deleteEmployee function as a prop
   return (
     <div className="employee-card">
-      <img src={employee.image} alt={employee.firstName} />
+      <img src={employee.image} 
+      alt={`${employee.firstName} ${employee.lastName}`}
+ />
 
       <h3>
         {employee.firstName} {employee.lastName}
